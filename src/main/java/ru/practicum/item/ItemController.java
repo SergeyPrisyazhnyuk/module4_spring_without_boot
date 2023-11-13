@@ -18,7 +18,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto add(@RequestHeader("X-Later-User-Id") Long userId,
-                       @RequestBody ItemDto item) {
+                    @RequestBody ItemDto item) {
         return itemService.addNewItem(userId, item);
     }
 

@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class ItemRepositoryImpl implements ItemRepository{
-
+public class ItemRepositoryImpl implements ItemRepository {
     private final Map<Long, List<Item>> items = new HashMap<>();
 
     @Override
