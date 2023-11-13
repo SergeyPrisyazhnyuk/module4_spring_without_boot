@@ -4,14 +4,14 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.startup.Tomcat;
-import org.springframework.beans.BeansException;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 
 public class LaterApplication {
 
-    public static void main(String[] args) throws LifecycleException, BeansException {
+    public static void main(String[] args) throws LifecycleException {
         Tomcat tomcat = new Tomcat();
+        tomcat.setSilent(true);
         tomcat.getConnector().setPort(8080);
 
         Context tomcatContext = tomcat.addContext("", null);
