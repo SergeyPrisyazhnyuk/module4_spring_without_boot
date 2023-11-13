@@ -19,8 +19,6 @@ import java.util.Properties;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.practicum")
 @PropertySource(value = "classpath:application.properties")
-@EnableTransactionManagement // включает управление транзакциями и обработку соответствующих аннотаций
-@EnableJpaRepositories(basePackages = "ru.practicum")
 public class PersistenceConfig {
     private final Environment environment;
 
