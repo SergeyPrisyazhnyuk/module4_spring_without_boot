@@ -3,6 +3,7 @@ package ru.practicum.item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import ru.practicum.user.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,4 +37,6 @@ public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredi
     List<ItemCountByUser> countByUserRegistered(LocalDate dateFrom, LocalDate dateTo);
 
     void deleteByUserIdAndId(long userId, long itemId);
+
+    Optional<Item> findByUserAndResolvedUrl(User user, String resolvedUrl);
 }

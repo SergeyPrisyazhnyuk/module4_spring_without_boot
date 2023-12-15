@@ -4,10 +4,12 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.exception.ForbidenException;
 import ru.practicum.user.User;
 import ru.practicum.user.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -16,6 +18,7 @@ import java.util.Set;
 class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
     private final UserRepository userRepository;
+    private final UrlMetaDataRetrieverImpl urlMetaDataRetriever;
 
     @Override
     public List<ItemDto> getItems(long userId) {
@@ -25,10 +28,23 @@ class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public ItemDto addNewItem(long userId, ItemDto itemDto) {
+    public ItemDto addNewItem(long userId, ItemDtoRequest itemDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Item item = repository.save(ItemMapper.mapToItem(itemDto, user));
+                .orElseThrow(() -> new ForbidenException("You do not have permission to perform this operation"));
+
+        UrlMetaDataRetriever.UrlMetadata result = urlMetaDataRetriever.retrieve(itemDto.getUrl());
+
+        Optional<Item> maybeExistingItem = repository.findByUserAndResolvedUrl(user, result.getResolvedUrl());
+        Item item;
+        if (maybeExistingItem.isEmpty()) {
+            item = repository.save(ItemMapper.mapToItem(result, user, itemDto.getTags()));
+        } else {
+            item = maybeExistingItem.get();
+            if (itemDto.getTags() != null && !itemDto.getTags().isEmpty()) {
+                item.getTags().addAll(itemDto.getTags());
+                repository.save(item);
+            }
+        }
         return ItemMapper.mapToItemDto(item);
     }
 

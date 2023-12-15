@@ -10,7 +10,7 @@ interface ItemService {
     List<ItemDto> getItems(long userId);
 
     @Transactional
-    ItemDto addNewItem(long userId, ItemDto itemDto);
+    ItemDto addNewItem(long userId, ItemDtoRequest itemDto);
 
     @Transactional
     void deleteItem(long userId, long itemId);
